@@ -1,0 +1,86 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           pokemon-move-db
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/pokemon-move-db#readme>
+homepage:       https://github.com/githubuser/pokemon-move-db#readme
+bug-reports:    https://github.com/githubuser/pokemon-move-db/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2022 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/pokemon-move-db
+
+library
+  exposed-modules:
+      GenI.Attribute
+      GenI.Damage
+      GenI.Effect
+      GenI.Move
+      GenI.Success
+      GenII.Attribute
+      GenII.Damage
+      GenII.Effect
+      GenII.Move
+      GenII.Success
+      GenIII.Attribute
+      GenIII.Damage
+      GenIII.Effect
+      GenIII.Move
+      GenIII.Success
+      GenIV.Attribute
+      GenIV.Damage
+      GenIV.Effect
+      GenIV.Move
+      GenIV.Success
+      GenIV.Updates
+      GenV.Attribute
+      GenV.Damage
+      GenV.Effect
+      GenV.Move
+      Lib
+      Moves.GenV
+  other-modules:
+      Paths_pokemon_move_db
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable pokemon-move-db-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_pokemon_move_db
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , pokemon-move-db
+  default-language: Haskell2010
+
+test-suite pokemon-move-db-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_pokemon_move_db
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , pokemon-move-db
+  default-language: Haskell2010
