@@ -7,6 +7,7 @@ module Logic.Damage.Ratio (
   ,baseAttack
   ,baseDefence
   ,UpOrDown(..)
+  ,Ratio
   ,statFrom
   ,flipCategory
   ,swapStat
