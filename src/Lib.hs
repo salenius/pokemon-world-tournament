@@ -1,4 +1,4 @@
 module Lib where
 
-import Pokemon.GenV
-import Moves.GenV
+-- import Pokemon.GenV
+-- import Moves.GenV

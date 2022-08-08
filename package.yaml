@@ -21,8 +21,10 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- pokemon-species-db >= 0.1.0.0
-- pokemon-move-db >= 0.1.0.0
+- freer-simple >= 1.2.1
+- recursion-schemes >= 5.2.2
+- lens >= 4.19.2
+- containers >= 0.6.5.1
 
 library:
   source-dirs: src
