@@ -1,0 +1,6 @@
+
+*.hs~
+*.cabal~
+*.log
+*.log~
+.gitignore~ 
