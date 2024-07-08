@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 -- | 
 {-# LANGUAGE DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
@@ -5,10 +6,11 @@
 module PWT.Trainer where
 
 import Data.Bifunctor
+import Data.Text
 
 data Trainer pkmn it = Trainer
   {
-    name :: String
+    name :: Text
   , trainerClass :: Class
   , wealth :: Money
   , party :: Party pkmn
@@ -18,6 +20,8 @@ data Trainer pkmn it = Trainer
 instance Bifunctor Trainer where
   bimap f g (Trainer n t w p i) = Trainer n t w (fmap f p) (fmap g i)
 
+introduce :: Trainer pkmn it -> Text
+introduce trainer = className (trainerClass trainer) <> " " <> name trainer
 
 type Bag a = [a]
 
@@ -32,4 +36,4 @@ data Party a =
 
 newtype Money = Money Int deriving (Eq,Show,Ord,Num)
 
-newtype Class = Class String deriving (Eq,Show,Ord)
+newtype Class = Class {className :: Text} deriving (Eq,Show,Ord)
