@@ -72,6 +72,8 @@ function smartprint(x){
 
 }
 
+
+
 function splitListed(x, pattern, patterncopy, dotPattern){
     linecopy = x;
     # patterncopy = $0;
