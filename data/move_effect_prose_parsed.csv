@@ -1,11 +1,11 @@
 0@effect@required condition@how long
 1@Inflicts regular damage with no additional effect@-@-
 2@Puts the target to sleep@-@-
-3@Has a <effect_chance> chance to [poison]{mechanic:poison} the target@-@-
+3@Has a <effect_chance> chance to poison{mechanic:poison} the target@-@-
 4@Drains half the damage inflicted to heal the user@-@-
-5@Has a <effect_chance> chance to [burn]{mechanic:burn} the target@-@-
-6@Has a <effect_chance> chance to [freeze]{mechanic:freeze} the target@-@-
-7@Has a <effect_chance> chance to [paralyze]{mechanic:paralysis} the target@-@-
+5@Has a <effect_chance> chance to burn{mechanic:burn} the target@-@-
+6@Has a <effect_chance> chance to freeze{mechanic:freeze} the target@-@-
+7@Has a <effect_chance> chance to paralyze{mechanic:paralysis} the target@-@-
 8@User faints@-@-
 9@Drains half the damage inflicted to heal the user@-@-
 9@Only works on sleeping Pokémon@-@-
@@ -34,7 +34,7 @@
 34@Badly poisons the target, inflicting more damage every turn@-@-
 35@Scatters money on the ground worth five times the user's level@-@-
 36@Reduces damage from special attacks by 50% for five turns@-@-
-37@Has a <effect_chance> chance to [burn]{mechanic:burn}, [freeze]{mechanic:freeze}, or [paralyze]{mechanic:paralysis} the target@-@-
+37@Has a <effect_chance> chance to burn{mechanic:burn}, freeze{mechanic:freeze}, or paralyze{mechanic:paralysis} the target@-@-
 38@User sleeps for two turns, completely healing itself@-@-
 39@Causes a one-hit KO@-@-
 40@Requires a turn to charge before attacking@-@-
@@ -130,7 +130,7 @@
 124@Power increases as happiness decreases, up to a maximum of 102@-@-
 125@Protects the user's field from  confusion for five turns@-@-
 125@Protects the user's field from major status ailments  for five turns@-@-
-126@Has a <effect_chance> chance to [burn]{mechanic:burn} the target@-@-
+126@Has a <effect_chance> chance to burn{mechanic:burn} the target@-@-
 126@Lets frozen Pokémon thaw themselves@-@-
 127@Power varies randomly from 10 to 150@-@-
 128@Allows the trainer to switch out the user@-@-
@@ -224,10 +224,8 @@
 198@Has a <effect_chance> chance to inflict a status effect which depends upon the terrain@-@-
 199@User receives 1/3 the damage inflicted in recoil@-@-
 200@Confuses the target@-@-
-201@Has an increased chance for a critical hit and Has a <effect_chance> chance to [burn]{mechanic:burn} the target@-@-
-201@Has an increased chance for a critical hit and Has a <effect_chance> chance to [burn]{mechanic:burn} the target@-@-
-201@Has an increased chance for a critical hit and Has a <effect_chance> chance to [burn]{mechanic:burn} the target@-@-
-201@Has an increased chance for a critical hit and Has a <effect_chance> chance to [burn]{mechanic:burn} the target@-@-
+201@Has a <effect_chance> chance to burn{mechanic:burn} the target@-@-
+201@Has an increased chance for a critical hit@-@-
 202@Halves all Electric-type damage@-@-
 203@Has a <effect_chance> chance to badly poison the target@-@-
 204@If there be weather, this move has doubled power @If there be weather@-
@@ -303,7 +301,7 @@
 252@Restores 1/16 of the user's max HP each turn@-@-
 253@User is immune to Ground  effects for five turns@-@-
 253@User is immune to Ground moves  for five turns@-@-
-254@Has a <effect_chance> chance to [burn]{mechanic:burn} the target@-@-
+254@Has a <effect_chance> chance to burn{mechanic:burn} the target@-@-
 254@User takes 1/3 the damage inflicted in recoil@-@-
 255@User takes 1/4 User's max HP in recoil@-@-
 256@hits next turn@-@-
@@ -334,10 +332,8 @@
 273@Hits through  Detect@-@-
 273@Hits through Protect @-@-
 273@User vanishes, dodging all attacks@-@-
-274@Has a <effect_chance> chance to [burn]{mechanic:burn} the target and Has a <effect_chance> chance to make the target flinch@-@-
-274@Has a <effect_chance> chance to [burn]{mechanic:burn} the target and Has a <effect_chance> chance to make the target flinch@-@-
-274@Has a <effect_chance> chance to [burn]{mechanic:burn} the target and Has a <effect_chance> chance to make the target flinch@-@-
-274@Has a <effect_chance> chance to [burn]{mechanic:burn} the target and Has a <effect_chance> chance to make the target flinch@-@-
+274@Has a <effect_chance> chance to burn{mechanic:burn} the target@-@-
+274@Has a <effect_chance> chance to make the target flinch@-@-
 275@Has a <effect_chance> chance to freeze the target@-@-
 275@Has a <effect_chance> chance to make the target flinch@-@-
 276@Has a <effect_chance> chance to make the target flinch@-@-
@@ -409,9 +405,9 @@
 323@Raises the user's Attack by one stage each@-@-
 323@Raises the user's Defense by one stage each@-@-
 324@Gives the user's held item to the target@-@-
-325@With [Grass Pledge]{move:grass-pledge}, halves opposing Pokémon's Speed for four turns@-@-
-326@With [Water Pledge]{move:water-pledge}, doubles the effect chance of friendly Pokémon's moves for four turns@-@-
-327@With [Fire Pledge]{move:fire-pledge}, damages opposing Pokémon for 1/8 their max HP every turn for four turns@-@-
+325@With Grass Pledge{move:grass-pledge}, halves opposing Pokémon's Speed for four turns@-@-
+326@With Water Pledge{move:water-pledge}, doubles the effect chance of friendly Pokémon's moves for four turns@-@-
+327@With Fire Pledge{move:fire-pledge}, damages opposing Pokémon for 1/8 their max HP every turn for four turns@-@-
 328@Raises the user's Attack  by one stage each@-@-
 328@Raises the user's  Special Attack by one stage each@-@-
 329@Raises the user's Defense by three stages@-@-
@@ -419,14 +415,14 @@
 331@Lowers the target's Speed by one stage@-@-
 332@Has a <effect_chance> chance to paralyze the target@-@-
 332@Requires a turn to charge before attacking@-@-
-333@Has a <effect_chance> chance to [burn]{mechanic:burn} the target@-@-
+333@Has a <effect_chance> chance to burn{mechanic:burn} the target@-@-
 333@Requires a turn to charge before attacking@-@-
 334@Has a <effect_chance> chance to confuse the target@-@-
 335@Lowers the user's Defense by one stage each@-@-
 335@Lowers the user's Special Defense by one stage each@-@-
 335@Lowers the user's Speed by one stage each@-@-
-336@With [Fusion Bolt]{move:fusion-bolt}, inflicts double damage@-@-
-337@With [Fusion Flare]{move:fusion-flare}, inflicts double damage@-@-
+336@With Fusion Bolt{move:fusion-bolt}, inflicts double damage@-@-
+337@With Fusion Flare{move:fusion-flare}, inflicts double damage@-@-
 338@Deals  {type:fighting}@-@-
 338@{type:flying}-type damage@-@-
 339@Can only be used after the user has eaten a berry@-@-
@@ -562,9 +558,9 @@
 10001@Has an increased chance for a critical hit in Hyper Mode@-@-
 10002@User receives 1/2 User's HP in recoil@-@-
 10003@Halves HP of all Pokémon on the field@-@-
-10003@Must recharge,Halves [HP]{mechanic:hp} of all Pokémon on the field@-@-
+10003@Must recharge,Halves HP{mechanic:hp} of all Pokémon on the field@-@-
 10004@Lowers the target's evasion by two stages@-@-
-10005@Removes [Light Screen]{move:light-screen}@-@-
-10005@Removes [Reflect]{move:reflect}@-@-
-10005@Removes [Safeguard]{move:safeguard}@-@-
+10005@Removes Light Screen{move:light-screen}@-@-
+10005@Removes Reflect{move:reflect}@-@-
+10005@Removes Safeguard{move:safeguard}@-@-
 10006@Changes the weather to Shadow Sky for five turns@-@-
