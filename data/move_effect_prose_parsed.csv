@@ -109,8 +109,10 @@
 108@Target loses 1/4 Target's max HP every turn as long as Target asleep@-@-
 109@Raises the user's evasion by two stages@-@-
 110@Ghosts pay half their max HP to hurt the target every turn@-@-
-110@Others decrease Speed but raise Attack @-@-
-110@Others decrease Speed but raise  Defense@-@-
+110@Others decrease Speed  @-@-
+110@Others decrease Speed @-@-
+110@Others  raise Attack @-@-
+110@Others  raise  Defense@-@-
 112@Prevents any moves from hitting the user this turn@-@-
 113@Scatters Spikes, hurting opposing Pokémon that switch in@-@-
 114@allows target to be hit by  Fighting moves even if target a Ghost@-@-
@@ -282,8 +284,7 @@
 236@Power increases when this move has less PP, up to a maximum of 200@-@-
 237@Prevents target from restoring target's HP for five turns@-@-
 238@Power increases against targets with more HP remaining, up to a maximum of 121 power@-@-
-239@User swaps Attack @-@-
-239@User swaps  Defense@-@-
+239@User swaps Attack <-> Defense@-@-
 240@Nullifies target's ability until target leaves battle@-@-
 241@Prevents the target from scoring critical hits for five turns@-@-
 242@Uses the target's move against target before target attacks, with power increased by half@-@-
@@ -346,8 +347,7 @@
 280@Averages  Special Defense with the target@-@-
 281@Averages Attack  with the target@-@-
 281@Averages  Special Attack with the target@-@-
-282@All Pokémon's Defense  are swapped for 5 turns@-@-
-282@All Pokémon's  Special Defense are swapped for 5 turns@-@-
+282@All Pokémon's Defense <-> Special Defense are swapped for 5 turns@-@-
 283@Inflicts damage based on the target's Defense, not Special Defense@-@-
 284@Inflicts double damage if the target is Poisoned@-@-
 285@halves the user's weight@-@-
@@ -423,8 +423,8 @@
 335@Lowers the user's Speed by one stage each@-@-
 336@With Fusion Bolt{move:fusion-bolt}, inflicts double damage@-@-
 337@With Fusion Flare{move:fusion-flare}, inflicts double damage@-@-
-338@Deals  {type:fighting}@-@-
-338@{type:flying}-type damage@-@-
+338@Deals  {type:fighting} -type damage@-@-
+338@Deals   {type:flying}-type damage@-@-
 339@Can only be used after the user has eaten a berry@-@-
 340@Raises the Attack  of all {type:grass} Pokémon in battle@-@-
 340@Raises the  Special Attack of all {type:grass} Pokémon in battle@-@-

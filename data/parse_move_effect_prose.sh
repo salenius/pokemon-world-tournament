@@ -25,6 +25,8 @@ cat veekun/move_effect_prose.csv |
  # 352 case
  sed 's/1\.5/3\/2/' |
  awk -F, '{sub(",","@"); print}' |
+ awk -F\@ 'BEGIN {OFS = FS} $2 ~ /^User swaps Attack and Defense/ && $2 !~ /(^target)/ {sub(/and/,"<->",$2); print "--- " $2} {print}' |
+ awk -F\@ 'BEGIN {OFS = FS} $2 ~ /All Pokémon.*and.*are swapped for/ {sub(/ and /, " <-> ",$2)} {print}' |
  awk -F\@ -f move_effect_it_rename.awk |
  awk -F\@ '{split($0,result,".");print result[1]; print $1"@"result[2];}' |
  awk -F\@ '($2 != "") {print $0}' |
@@ -70,9 +72,12 @@ cat veekun/move_effect_prose.csv |
  awk -F\@ 'BEGIN {OFS = FS} $2 ~ /^Blocks/ || $2 ~ /^Grants the user protection for the rest/ {sub(/.*/, "for the rest of the turn", $7)} {print}' |
  replaceAndTerms "(User|target)" |
  replaceAndTerms "(the user's|target(s)?'s)" |
- replaceAndTerms "\\[\\]\\{type:[a-z]+\\}" |
  # Split from any and
  awk -F\@ -f move_handle_352_and_369.awk |
+ replaceAndTerms "({type:fighting}|{type:flying})" |
  awk -F\@ 'BEGIN {OFS = FS} $2 ~ / and / {c1 = $0; c2 = $0; s2 = $2; split(s2,dict," and "); sub(s2, dict[1],c1); sub(s2, dict[2],c2); print c1; print c2} $2 !~ / and / {print}' |
  awk -F\@ 'BEGIN {OFS = FS; print "0" FS "effect" FS "required condition" FS "how long"}{sub(/^ /, "",$2);print $1 FS $2 FS $6 FS $7}' |
+ # Handle Curse case 
+ awk -F\@ 'BEGIN {OFS =FS;} $2 ~ /Other.*but/ {sub(/ but /, " and ", $2)} {print}' |
+ replaceAndTerms "(decrease Speed|raise (Attack| Defense))"  |
  sort -k 1 -n -t "@" > move_effect_prose_parsed.csv
