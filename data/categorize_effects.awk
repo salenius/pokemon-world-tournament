@@ -26,10 +26,11 @@ BEGIN {OFS = FS}
     isUserSpecific = "is user specific";
     isTargetSpecific = "is target specific";
     pokemonAffected = "pokemon affected";
-    damageIsModified = "has damage modification"
-    effectExecutionOrder = "effect execution order"
+    damageIsModified = "has damage modification";
+    effectExecutionOrder = "effect execution order";
+    isAContinuation = "is continuation";
 
-    new_columns[hasProbability] = 0;
+    new_columns[hasProbability] = "-";
     new_columns[isCapability] = 0;
     new_columns[isRequirement] = 0;
     new_columns[isInterPokemon] = 0;
@@ -43,7 +44,9 @@ BEGIN {OFS = FS}
     # one. These are characterized by the phrase ", then"
     # but there could be others too.
     new_columns[effectExecutionOrder] = 1;
-
+    new_columns[isAContinuation] = 0;
+    new_columns[isPlayerFieldBased] = 0;
+    new_columns[isGlobalFieldBased] = 0;
 
     # Do these globally
     
@@ -124,11 +127,18 @@ function genetive_next_word_after_match(str, pattern){
     return m" "new;
 }
 
-
+##### HAS PROBABILITY
 $2 ~ /^Has <effect_chance> chance to/ {
-    new_columns[hasProbability] = 1;
+    new_columns[hasProbability] = "constant";
     $2 = genetive_next_word_after_match($2, "^Has .* chance to");
 }
+$2 ~ /^Has higher chance/ {
+    m = take_match($2, "when .*");
+    new_columns[hasProbability] = m;
+}
+
+$2 ~ /^hits next turn/ {new_columns[isAContinuation] = 1;}
+$2 ~ /replacement/ {new_columns[isAContinuation] = 1;}
 
 $2 ~ /^(Only works|Can only) / {new_columns[isRequirement] = 1;}
 
@@ -144,12 +154,14 @@ $2 ~ /^Power (is (higher|doubled|[0-9]+ times)|doubles every turn|varies randoml
 $2 ~ /^type depend/ {new_columns[damageIsModified] = 1;}
 $2 ~ /hits back .*damage/ {new_columns[damageIsModified] = 1;}
 $2 ~ /Hits [0-9]-[0-9] times/ {new_columns[damageIsModified] = 1;}
+$2 ~ /Hits * times in (one|same) turn/ {new_columns[damageIsModified] = 1;}
 $2 ~ /Inflicts.*points of damage/ {new_columns[damageIsModified] = 1;}
 $2 ~ /Inflicts regular damage/ {new_columns[damageIsModified] = 1;}
 $2 ~ /Super-effective against/ {new_columns[damageIsModified] = 1;}
 $2 ~ /this move has/ {new_columns[damageIsModified] = 1;}
 $2 ~ /always score critical hit/ {new_columns[damageIsModified] = 1;}
 $2 ~ /Damages opponents, but/ {new_columns[damageIsModified] = 1;}
+$2 ~ /Calculates damage with/ {new_columns[damageIsModified] = 1;}
 
 ##### INTER-POKEMON
 $2 ~ /([Cc]op(y|ies) |[Uu]ser with target.* swap |target.*user also|Exchanges user's.*with target's)/ {
@@ -164,6 +176,7 @@ $2 ~ /User becomes target's type/ {new_columns[isInterPokemon] = 1;}
 ### CAPABILITIES
 $2 ~ /^(Never misses|[Cc]an (^only))/ {new_columns[isCapability] = 1;}
 $2 ~ /Never misses/ {new_columns[isCapability] = 1;}
+$2 ~ /Always scores critical hit/ {new_columns[isCapability] = 1;}
 $2 ~ /^Deals.*type.*damage/ {new_columns[isCapability] = 1;}
 $2 ~ /^Hits through/ {new_columns[isCapability] = 1;}
 $2 ~ /can hit/ {new_columns[isCapability] = 1;}
@@ -184,14 +197,20 @@ $2 ~ /[Uu]ser's replacement/ && $ifCondCol == "-" {
 
 $2 == "uses berry" {sub("uses berry", "uses target's berry", $2);}
 
-$2 ~ /^Pokémon cannot/ {sub(/Pokémon/, "all Pokémon",$2);}
+$2 ~ /^Pokémon cannot/ {sub(/Pokémon/, "all "pokemonStr,$2);}
 
 $2 ~ /removes Leech Seed/ {sub(/removes/, "removes user's",$2);}
+$2 ~ /blows away Spikes/ {sub(/blows away/, "removes user's",$2);}
 
 $2 ~ /Lets frozen/ {
     sub(/Lets frozen Pokémon thaw themselves/, "Cures user of freeze",$2);
     $ifCondCol = "if user is frozen";
 }
+
+$2 ~ /Negates held items/ {sub(/Negates held items/, "all "pokemonStr" cannot use held items");}
+
+#### GLOBAL FIELD EFFECTS
+/Changes (weather|terrain)/ {new_columns[isGlobalFieldBased] = 1;}
 
 #### CURSE
 $2 ~ /^(Ghosts|Others)/ {
@@ -240,6 +259,9 @@ $2 ~ /^User charges/ {new_columns[isUserSpecific] = 1;}
 $2 ~ /^Requires turn to charge/ {new_columns[isUserSpecific] = 1;}
 $2 ~ /recharge(s)?/ {new_columns[isUserSpecific] = 1;}
 $2 ~ /dodging all attacks/ {new_columns[isUserSpecific] = 1;}
+
+# Multi-target causes problems down the line
+$2 ~ /multi-target/ {sub(/multi-target/, "multi-focused", $2);}
 
 #############3
 ### VERY IMPORTANT
