@@ -26,6 +26,7 @@
               haskellPackages.doctest
 	            haskellPackages.QuickCheck
               haskellPackages.aeson
+              haskellPackages.scientific
 
               # Try out different CSV tools and which one is the best
               pkgs-new.xan # CSV parser

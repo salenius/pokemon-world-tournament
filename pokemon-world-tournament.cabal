@@ -65,15 +65,23 @@ executable pokemon-world-tournament
     other-modules:
                       PWT
                       PWT.Menu
+                      Data.Internal.Pokemon
+                      Data.Internal.Type
+                      Data.Stats
+                      Data.Units
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
     build-depends:    base ^>=4.18.2.1,
+                      extra >= 1.8,
                       containers >= 0.6.7,
+                      aeson >= 2.2.3.0,
                       recursion-schemes >= 5.2.3,
-                      text >= 2.0.2
+                      bytestring >= 0.11.5.2,
+                      text >= 2.0.2,
+                      scientific >= 0.3.8
 
     -- Directories containing source files.
     hs-source-dirs:   app, src
