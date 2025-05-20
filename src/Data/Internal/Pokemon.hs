@@ -1,6 +1,53 @@
 {-# LANGUAGE OverloadedStrings, LambdaCase #-}
 
-module Data.Internal.Pokemon where
+module Data.Internal.Pokemon (
+  Pokemon()
+  -- Stats
+  ,hp,attack,defence,specialAttack,specialDefence,speed
+
+  -- Constructors
+  ,fromJson
+  ,ditto
+
+  -- Functor, bifunctor, applicative and monad API tools
+  ,mapSpec
+  ,mapIndv
+  ,transform
+  ,getSpec
+  ,getIndv
+  ,pullSpec
+  ,pullIndv
+
+  -- Getters
+  ,name
+  ,type1
+  ,type2
+  ,base
+  ,weight
+  ,height
+  ,baseExp
+  ,catchRate
+  ,isLegendary
+  ,isMythical
+  ,hasPreviousEvolutions
+  ,evolvesFurther
+
+  -- Setters
+  ,sName
+  ,sType1
+  ,sType2
+  ,sBase
+  ,sWeight
+  ,sHeight
+  ,sBaseExp
+  ,sCatchRate
+  ,sIsLegendary
+  ,sIsMythical
+  ,sHasPreviousEvolutions
+  ,sEvolvesFurther
+ 
+  
+                             ) where
 
 {-
 
@@ -36,18 +83,16 @@ import qualified Data.Aeson as Aeson
 import Data.Aeson.Types
 import Data.Units
 import Data.Stats
-import Data.Text hiding (filter,elem,head,length,foldr,maximum,empty)
+import Data.List (groupBy,sortBy)
+import Data.Text hiding (filter,elem,head,length,foldr,maximum,empty,groupBy,map)
 import Data.Char hiding (isAscii)
 import Data.Internal.Type
-import Data.Maybe (fromMaybe)
-import Data.ByteString.Lazy hiding (filter,elem,head,length,foldr,maximum,empty)
+import Data.Maybe (fromMaybe,listToMaybe)
+import Data.ByteString.Lazy hiding (filter,elem,head,length,foldr,maximum,empty,groupBy,map)
 import qualified Data.Text as Text
 import Control.Applicative
 import Control.Monad
-import Data.Scientific (base10Exponent,toRealFloat,Scientific(..))
-
--- debug
-import Debug.Trace
+import Data.Scientific (toRealFloat,Scientific(..))
 
 data Pokemon s i = PokemonPrim {
   _species :: s
@@ -75,7 +120,7 @@ instance Show (Pokemon s i) where
 -- accessed and manipulated by `pullSpec`, `mapSpec` and `spec` functions.
 fromJson :: (ByteString -> Maybe s) -> ByteString -> Maybe (Pokemon s ())
 fromJson st txt = do
-  pkmn <- (Aeson.decode txt :: Maybe (Pokemon NUnit NUnit))
+  pkmn <- Aeson.decode txt :: Maybe (Pokemon () ())
   spec <- st txt
   return $ bimap (const spec) (const ()) pkmn
 
@@ -324,6 +369,9 @@ instance Monoid s => Monad (Pokemon s) where
   return = pure
   m >>= f = transform (fmap f m)
 
+specCondToList :: (a -> Bool) -> [SpecInfo] -> a -> [SpecInfo]
+specCondToList cond spc x = if cond x then spc else []
+
 instance (Aeson.FromJSON a, Aeson.FromJSON b) => Aeson.FromJSON (Pokemon a b) where
   parseJSON ob = withObject "Pokemon" (\v -> do
 
@@ -331,44 +379,33 @@ instance (Aeson.FromJSON a, Aeson.FromJSON b) => Aeson.FromJSON (Pokemon a b) wh
     i <- parseJSON ob
     
     name' <- v .: "name"
-    stats <- v .: "stats"
 
-    baseHp <- statToInt "hp" stats
-    baseAttack <- statToInt "attack" stats
-    baseDefense <- statToInt "defense" stats
-    baseSattack <- statToInt "special-attack" stats
-    baseSdefense <- statToInt "special-defense" stats
-    baseSpeed <- statToInt "speed" stats
-
-    guard $ baseHp > 0 && baseAttack > 0 && baseDefense > 0
-    guard $ baseSpeed > 0 && baseSattack > 0 && baseSdefense > 0
-
-    phys <- v .: "physiology"
-
-    Aeson.Number weightUn <- phys .: "weight"
-    Aeson.Number heightUn <- phys .: "height"
-
-    -- Normalize physiology measures
-    let weightN = weightUn / 10
-        heightN = heightUn / 10
-
-    weight' <- kg . toRealFloat $ weightN
-    height' <- meters . toRealFloat $ heightN
+    Stats (
+      baseHp
+      ,baseAttack
+      ,baseDefense
+      ,baseSattack
+      ,baseSdefense
+      ,baseSpeed
+          ) <- parseJSON ob
+    
+    weight' <- parsePhysio v "weight" >>= kg
+    height' <- parsePhysio v "height" >>= meters
     
     species <- v .: "species"
-    captureRate <- numericField "capture_rate" species
+    captureRate <- parsePositiveInt "capture_rate" species
 
-    lgndS <- species .: "is_legendary"
-    Aeson.Bool mythS <- species .: "is_mythical"
-    Aeson.Array frthE <- species .: "next_evolutions"
-    baseExperience <- numericField "base_experience" v
+    baseExperience <- parsePositiveInt "base_experience" v
 
-    guard $ captureRate >= 0 && baseExperience >= 0
-
-    let isLegendary' = if lgndS then [Legendary] else []
-        isMythical'  = if mythS then [Mythical] else []
-        nextEvolutions = if length frthE > 0 then [NextEvolutions] else []
-        prevEvolutions = [] -- Not yet possíble to access data from JSON
+    let prevEvolutions = [] -- Not yet possíble to access data from JSON
+    isLegendary' <- specCondToList id [Legendary] <$> species .: "is_legendary"
+    -- By default, in the Veekun data set, Pokemon are not classified as legendary
+    -- if they are already mythical. We are doing a different classification here
+    -- such that all mythical Pokemon are also legendary, but not vice-versa.
+    isMythical' <- specCondToList id [Legendary,Mythical] <$> species .: "is_mythical"
+    nextEvolutions <- specCondToList ((<) 0 . length) [NextEvolutions] <$> do
+      Aeson.Array ar <- species .: "next_evolutions"
+      return ar
 
     -- Types
     TypePair a b <- parseJSON ob
@@ -392,28 +429,6 @@ instance (Aeson.FromJSON a, Aeson.FromJSON b) => Aeson.FromJSON (Pokemon a b) wh
       , _specInfo = isLegendary' ++ isMythical' ++ prevEvolutions ++ nextEvolutions
       }) ob
     
-parseTypes :: Aeson.Value -> Parser (Type, Maybe Type)
-parseTypes tps  = do
-  a <- type1x tps
-  b <- type2x tps
-  return (a,b)
-  where
-    type1x = withArray "types" $ \a -> do
-      ts1 <- forM a $ \case
-        (Object o) -> do
-          slot <- o .: "slot"
-          guard $ slot == Aeson.Number 1
-          name' <- o .: "name"
-          return $ fromMaybe Normal (readText name')
-        _ -> empty
-      return $ maximum ts1
-    type2x ts = return Nothing      
-
-newtype NUnit = NUnit () deriving (Eq,Show,Ord)
-
-instance FromJSON NUnit where
-  parseJSON _ = return (NUnit ())
-
 data Stats = Stats (Int,Int,Int,Int,Int,Int) deriving (Show)
 
 statToInt :: Aeson.Key -> Aeson.Value -> Parser Int
@@ -439,33 +454,68 @@ instance FromJSON Stats where
 
     return $ Stats (baseHp, baseAttack, baseDefense, baseSattack, baseSdefense, baseSpeed)
 
-numericField :: Aeson.Key -> Aeson.Object -> Parser Int
-numericField fld obj = do
+parsePositiveInt :: Aeson.Key -> Aeson.Object -> Parser Int
+parsePositiveInt fld obj = do
     Aeson.Number stat' <- obj .: fld
     let dbl = toRealFloat stat' :: Double
+    guard $ dbl >= 0
     return $ floor dbl
 
 data TypePair = TypePair Type (Maybe Type) deriving (Show)
 
 instance FromJSON TypePair where
   parseJSON = withObject "pokemon" $ \o -> do
-    Aeson.Array arr <- o .: "types"
-    arr' <- forM arr $ \(Object x) -> do
+    lst <- slotsAndTypes o >>= onlyValidSlots
+    let (x,y) = maybeTuple lst
+    (x',y') <- atLeastFstOne (x,y)
+    case parseTypesFromText (x',y') of
+      (Nothing, Nothing) -> return $ TypePair Normal Nothing
+      (Nothing, Just Flying) -> return $ TypePair Normal (Just Flying)
+      (Nothing, Just a) -> return $ TypePair a Nothing
+      (Just a, Nothing) -> return $ TypePair a Nothing
+      (Just a, Just b) -> if a == b then empty else return (TypePair a (Just b))
+      
+
+slotsAndTypes :: Aeson.Object -> Parser [(Scientific, Text)]
+slotsAndTypes v = do
+  Aeson.Array arr <- v .: "types"
+  arr' <- forM arr $ \case
+    (Object x) -> do
       Aeson.Number slot <- x .: "slot"
-      Aeson.String name <- x .: "name"
-      return (slot, name)
-    let lst = foldr (:) [] arr'
-    let s1 = filter ((==) 1 . fst) lst
-    guard $ length s1 > 0
-    let h1 = head s1
-    let s2 = filter ((==) 2 . fst) lst
-    guard $ length s2 <= 1
-    let h2 = case length s2 of
-          1 -> Just (head s2)
-          _ -> Nothing
-    let h1' = fromMaybe Normal (readText . snd $ h1)
-    let h2' = do
-          b <- snd <$> h2
-          r <- readText b
-          return r
-    return $ TypePair h1' h2'
+      Aeson.String name' <- x .: "name"
+      return (slot, name')
+    _ -> empty
+  return . foldr (:) [] $ arr'
+
+onlyValidSlots :: (Eq n, Num n) => [(n, a)] -> Parser [(n, a)]
+onlyValidSlots lst = do
+  let vld = filter (\(n,_) -> n `elem` [1,2]) lst
+  guard $ length vld == length lst
+  return vld
+
+maybeTuple :: Ord n => [(n, a)] -> (Maybe a, Maybe a)
+maybeTuple [] = (Nothing, Nothing)
+maybeTuple lst =
+  listToTuple
+  . map (fmap snd . listToMaybe)
+  . groupBy (\x y -> fst x == fst y)
+  . sortBy (\x y -> compare (fst x) (fst y))
+  $ lst
+  where
+    listToTuple [] = (Nothing,Nothing)
+    listToTuple (x:[]) = (x, Nothing)
+    listToTuple (x:y:_) = (x, y)
+
+atLeastFstOne :: (Maybe a, Maybe a) -> Parser (a, Maybe a)
+atLeastFstOne (Nothing, _) = empty
+atLeastFstOne (Just a, b) = return (a, b)
+
+parseTypesFromText :: (Text, Maybe Text)  -> (Maybe Type, Maybe Type)
+parseTypesFromText (a, Nothing) = (readText a, Nothing)
+parseTypesFromText (a, Just b) = (readText a, readText b)
+                                   
+parsePhysio :: Aeson.Object -> Aeson.Key -> Parser Double
+parsePhysio obj k = do
+  phys <- obj .: "physiology"
+  Aeson.Number measure <- phys .: k
+  return . toRealFloat $ measure / 10
