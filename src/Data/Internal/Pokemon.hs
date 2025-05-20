@@ -518,4 +518,4 @@ parsePhysio :: Aeson.Object -> Aeson.Key -> Parser Double
 parsePhysio obj k = do
   phys <- obj .: "physiology"
   Aeson.Number measure <- phys .: k
-  return . toRealFloat $ measure / 10
+  return . toRealFloat $ measure
