@@ -1,4 +1,10 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
+import Data.Internal.Pokemon
+import qualified Data.ByteString.Lazy as B
+
 main :: IO ()
-main = putStrLn "Welcome to play Pokemon World Tournament!"
+main = do
+  putStrLn "Welcome to play Pokemon World Tournament!"

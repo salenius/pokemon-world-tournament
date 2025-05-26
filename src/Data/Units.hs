@@ -1,21 +1,25 @@
+{-# LANGUAGE GeneralisedNewtypeDeriving #-}
+
 module Data.Units where
 
 import Control.Monad
 import Control.Applicative
 
-newtype Kg = Kg { unKg :: Double } deriving (Eq,Show,Ord)
+newtype Kg = Kg { unKg :: Double } deriving (Eq,Show,Ord,Num)
 
-newtype Meters = Meters { unMeters :: Double } deriving (Eq,Show,Ord)
+newtype Meters = Meters { unMeters :: Double } deriving (Eq,Show,Ord,Num)
 
-kg :: (Alternative f, Monad f) => Double -> f Kg
-kg d = do
-  guard $ d < unKg maxBound && d > unKg minBound
-  pure . Kg $ d
+oneKg :: Kg
+oneKg = Kg 1
 
-meters :: (Alternative f, Monad f) => Double -> f Meters
-meters d = do
-  guard $ d < unMeters maxBound && d > unMeters minBound
-  pure . Meters $ d
+oneMeter :: Meters
+oneMeter = Meters 1
+
+kg :: Double -> Kg
+kg = Kg
+
+meters :: Double -> Meters
+meters = Meters
 
 instance Bounded Kg where
   minBound = Kg 0
