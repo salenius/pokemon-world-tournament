@@ -389,8 +389,8 @@ instance (Aeson.FromJSON a, Aeson.FromJSON b) => Aeson.FromJSON (Pokemon a b) wh
       ,baseSpeed
           ) <- parseJSON ob
     
-    weight' <- parsePhysio v "weight" >>= kg
-    height' <- parsePhysio v "height" >>= meters
+    weight' <- kg <$> parsePhysio v "weight"
+    height' <- meters <$> parsePhysio v "height"
     
     species <- v .: "species"
     captureRate <- parsePositiveInt "capture_rate" species

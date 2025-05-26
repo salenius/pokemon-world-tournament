@@ -65,10 +65,10 @@ executable pokemon-world-tournament
     other-modules:
                       PWT
                       PWT.Menu
-                      Data.Internal.Pokemon
                       Data.Internal.Type
                       Data.Stats
                       Data.Units
+                      Data.Pokemon.Attr
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
