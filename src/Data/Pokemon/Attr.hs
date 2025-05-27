@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeFamilies, OverloadedStrings, LambdaCase #-}
 
 module Data.Pokemon.Attr (
-  Attr(), fromJson,
+  Attr(), fromJson, dflt,
   PkmnStat(),
   Flag(),
   Rate(),
@@ -76,6 +76,23 @@ data Attr = Attr {
 
 fromJson :: BS.ByteString -> Maybe Attr
 fromJson = Aeson.decode
+
+dflt :: Attr
+dflt =
+  let
+    defaultStat = 48
+    defaultWeight = kg 4
+    defaultHeight = meters 0.3
+    defaultBExp = 101
+    defaultCRte = 35
+    stats = Attr defaultStat defaultStat defaultStat defaultStat defaultStat defaultStat False
+    types = stats Normal Nothing
+    flags = types False False False False
+    rates = flags defaultBExp defaultCRte
+    physio = rates defaultWeight defaultHeight
+  in
+    physio
+
 
 instance FromJSON Attr where
   parseJSON = let
