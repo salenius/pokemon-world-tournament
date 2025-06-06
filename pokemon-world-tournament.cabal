@@ -70,6 +70,7 @@ executable pokemon-world-tournament
                       Data.Units
                       Data.Pokemon.Attr
                       Data.Pokemon
+                      PWT.Pokemon
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
