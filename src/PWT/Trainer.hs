@@ -1,39 +1,25 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
--- | 
-{-# LANGUAGE DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
-
 module PWT.Trainer where
 
-import Data.Bifunctor
-import Data.Text
+type Fighter pkmn mv it = (pkmn, Individual mv it)
 
-data Trainer pkmn it = Trainer
-  {
-    name :: Text
-  , trainerClass :: Class
-  , wealth :: Money
-  , party :: Party pkmn
-  , itemBag :: Bag it
-  } deriving (Eq,Show,Ord,Functor)
+trainer :: Name -> Class -> Party (Fighter pkmn mv it) -> Trainer pkmn mv it
 
-instance Bifunctor Trainer where
-  bimap f g (Trainer n t w p i) = Trainer n t w (fmap f p) (fmap g i)
+individual :: MoveSet mv -> Level -> Individual mv it
 
-introduce :: Trainer pkmn it -> Text
-introduce trainer = className (trainerClass trainer) <> " " <> name trainer
+withItem :: Individual mv it -> it -> Individual mv it
+iv, ev :: Stat -> Int -> Individual mv it -> Individual mv it
+nature :: Nature -> Individual mv it -> Individual mv it
+withHP :: (MaxHP -> HP) -> Individual mv it -> Individual mv it
+withStatus :: Status -> Individual mv it -> Individual mv it
 
-type Bag a = [a]
+filterParty :: (Fighter pkmn mv it -> Bool) -> Trainer pkmn mv it -> Trainer pkmn mv it
 
-data Party a =
-  P1 a
-  | P2 a a
-  | P3 a a a
-  | P4 a a a a
-  | P5 a a a a a
-  | P6 a a a a a a
-  deriving (Eq,Show,Ord,Functor,Foldable,Traversable)
+withItemBag :: Trainer pkmn mv it -> [it] -> Trainer pkmn mv it
 
-newtype Money = Money Int deriving (Eq,Show,Ord,Num)
+withReward :: Trainer pkmn mv it -> Reward -> Trainer pkmn mv it
 
-newtype Class = Class {className :: Text} deriving (Eq,Show,Ord)
+tmap :: Trainer pkmn mv it -> TMap
+
+
+instance Bifunctor Individual where
+  bimap = undefined
