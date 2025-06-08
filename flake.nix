@@ -28,6 +28,7 @@
               haskellPackages.aeson
               haskellPackages.scientific
               haskellPackages.hoogle
+              haskellPackages.random
 
               # Try out different CSV tools and which one is the best
               pkgs-new.xan # CSV parser
