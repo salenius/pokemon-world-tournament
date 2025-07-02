@@ -4,6 +4,7 @@ import qualified Party.Gender as Gender
 import Champions.Ability
 import System.Random
 import Data.List (reverse)
+import qualified Party.Gender as Gender
 
 data RedPokemon =
   Pikachu PikachuAbility PikachuGender
@@ -465,4 +466,109 @@ instance BattleArmorAbility ArmaldoAbility where
 instance SwiftSwimAbility ArmaldoAbility where
   swiftSwim = ArmaldoSwiftSwim 
 
+data WallacePokemon =
+  WallacePartyMember WallacePartyMember (Gender.Gender Bool)
+  | Swampert SwampertAbility SwampertGender
+  | Starmie StarmieAbility 
+  deriving (Eq,Ord,Show)
+
+type SwampertGender = Gender.Gender Gender.SevenOutOfEight
+
+data WallacePartyMember =  
+  Milotic MiloticAbility 
+  | Sharpedo SharpedoAbility 
+  | Walrein WalreinAbility 
+  | Ludicolo LudicoloAbility
+  deriving (Eq,Ord,Show)
+
+data MiloticAbility =
+  MiloticMarvelScale
+  | MiloticCompetitive
+  | MiloticCuteCharm 
+  deriving (Eq,Ord,Enum,Bounded)
+data SharpedoAbility = 
+  SharpedoRoughSkin
+  | SharpedoSpeedBoost
+  deriving (Eq,Ord,Enum,Bounded)
+data WalreinAbility = 
+  WalreinThickFat
+  | WalreinIceBody
+  | WalreinOblivious
+  deriving (Eq,Ord,Enum,Bounded)
+data LudicoloAbility =
+  LudicoloSwiftSwim
+  | LudicoloRainDish
+  | LudicoloOwnTempo
+  deriving (Eq,Ord,Enum,Bounded)
+data SwampertAbility = 
+  SwampertTorrent
+  | SwampertDamp
+  deriving (Eq,Ord,Enum,Bounded)
+data StarmieAbility =
+  StarmieIlluminate
+  | StarmieNaturalCure
+  | StarmieAnalytic
+  deriving (Eq,Ord,Enum,Bounded)
+
+instance Show MiloticAbility where
+  show MiloticMarvelScale = "MarvelScale"
+  show MiloticCompetitive = "Competitive"
+  show MiloticCuteCharm  = "CuteCharm "
+instance Show SharpedoAbility where 
+  show SharpedoRoughSkin = "RoughSkin"
+  show SharpedoSpeedBoost = "SpeedBoost"
+instance Show WalreinAbility where 
+  show WalreinThickFat = "ThickFat"
+  show WalreinIceBody = "IceBody"
+  show WalreinOblivious = "Oblivious"
+instance Show LudicoloAbility where
+  show LudicoloSwiftSwim = "SwiftSwim"
+  show LudicoloRainDish = "RainDish"
+  show LudicoloOwnTempo = "OwnTempo"
+instance Show SwampertAbility where 
+  show SwampertTorrent = "Torrent"
+  show SwampertDamp = "Damp"
+instance Show StarmieAbility where
+  show StarmieIlluminate = "Illuminate"
+  show StarmieNaturalCure = "NaturalCure"
+  show StarmieAnalytic = "Analytic"
+
+--instance MarvelScaleAbility MiloticAbility where
+--  marvelScale = MiloticMarvelScale 
+--  MiloticCompetitive
+--  MiloticCuteCharm 
+--  deriving (Eq,Ord,Enum,Bounded)
+--data SharpedoAbility = 
+--  SharpedoRoughSkin
+--  SharpedoSpeedBoost
+--  deriving (Eq,Ord,Enum,Bounded)
+--data WalreinAbility = 
+--  WalreinThickFat
+--  WalreinIceBody
+--  WalreinOblivious
+--  deriving (Eq,Ord,Enum,Bounded)
+--data LudicoloAbility =
+--  LudicoloSwiftSwim
+--  LudicoloRainDish
+--  LudicoloOwnTempo
+--  deriving (Eq,Ord,Enum,Bounded)
+--data SwampertAbility = 
+--  SwampertTorrent
+--  SwampertDamp
+--  deriving (Eq,Ord,Enum,Bounded)
+--data StarmieAbility =
+--  StarmieIlluminate
+--  StarmieNaturalCure
+--  StarmieAnalytic
+--  deriving (Eq,Ord,Enum,Bounded)
+
+
+
+
+--MiloticAbility 
+--SharpedoAbility 
+--WalreinAbility 
+--LudicoloAbility
+--SwampertAbility 
+--StarmieAbility
 

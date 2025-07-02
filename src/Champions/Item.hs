@@ -59,3 +59,13 @@ instance HeldItem StevenPokemon where
   heldItem (Archeops _) = SitrusBerry
   heldItem (Cradily _ _) = ExpertBelt
   heldItem (Armaldo _ _) = WhiteHerb
+
+instance HeldItem WallacePokemon where
+  heldItem (WallacePartyMember p _) = go p 
+    where
+      go (Milotic _)  = RockyHelmet
+      go (Sharpedo _) = FocusSash
+      go (Walrein _)  = Leftovers
+      go (Ludicolo _) = LifeOrb
+  heldItem (Swampert _ _) = RindoBerry
+  heldItem (Starmie _)    = ExpertBelt
