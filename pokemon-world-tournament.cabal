@@ -73,6 +73,7 @@ executable pokemon-world-tournament
                       Party.Gender
                       Champions.Pokemon
                       Champions.Item
+                      Damage.Core
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
